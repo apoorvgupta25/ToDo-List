@@ -2,6 +2,7 @@ package com.example.todolist;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
                                 db.deleteNote(notesList.get(position).getId());
                                 notesList.remove(position);
                                 adapter.notifyDataSetChanged();
-                                Toast.makeText(MainActivity.this, "Note Deleted", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(MainActivity.this, "Note Deleted", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(findViewById(R.id.coordinatorLayout), "Note Deleted", Snackbar.LENGTH_LONG).show();
                             }
                         })
                         .setNegativeButton("No", null)
@@ -126,6 +128,23 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Log.i("Notes List size", String.valueOf(notesList.size()));
+
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                db.deleteNote(adapter.getNoteAt(viewHolder.getAdapterPosition()).getId());
+//                notesList.remove(position);
+//                adapter.notifyDataSetChanged();       //notifyDataSetChanged NOT NEEDED
+                Snackbar.make(findViewById(R.id.coordinatorLayout), "Note Deleted", Snackbar.LENGTH_LONG).show();
+            }
+        }).attachToRecyclerView(notesRecyclerView);
 
 //      Delete all note
         fabDelete.setOnClickListener(new View.OnClickListener() {

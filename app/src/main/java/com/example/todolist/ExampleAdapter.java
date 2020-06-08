@@ -85,6 +85,10 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
         }
     }
 
+    public ExampleItem getNoteAt(int position){
+        return mExampleList.get(position);
+    }
+
     @NonNull
     @Override
     public ExampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
